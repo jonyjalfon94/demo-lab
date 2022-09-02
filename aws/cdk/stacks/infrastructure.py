@@ -74,7 +74,7 @@ class InfrastructureStack(Stack):
             self, f"demo-eks-cluster",
             cluster_name="demo-eks-cluster",
             version=eks.KubernetesVersion.V1_21,
-            default_capacity=3,
+            default_capacity=1,
             default_capacity_instance=ec2.InstanceType("t3.medium"),
             vpc=vpc,
             masters_role=self.cluster_admin_role
