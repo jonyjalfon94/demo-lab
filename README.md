@@ -106,6 +106,8 @@ As i didn't use Terraform for the lab, i added a small bonus that uses Terraform
 
 NOTE: I do not own a GCP account so i'm using acloudguru ephemeral sandboxes so there is no need for storing the state terraform state as i'm running the code locally.
 
+NOTE: I could not finish this extra bonus as there are not enough permissions in the acloudguru sandbox in order to create a service account that has enough permissions to deploy into the cluster.
+
 ## Prerequisites
 
 1. Before deploying to GCP ensure you have the required APIs enabled
@@ -118,6 +120,8 @@ gcloud services enable containerregistry.googleapis.com
 ```
 gcloud auth application-default login
 ```
+
+3. Follow the procedure specified in this doc to set up the google cloud service account for github: [Deploying to Google Kubernetes Engine](https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-google-kubernetes-engine)
 
 ## Procedure
 
@@ -140,3 +144,5 @@ terraform plan
 ```
 terraform apply
 ```
+
+5. The pipeline for the GKE bonus is located in the gihub repo at `.github/workflows`. Each commit to the master branch triggers build and push to GCR and deploy using the helm chart into the GKE cluster.
