@@ -63,7 +63,7 @@ class EKSPipelineStack(Stack):
                             "aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_DEFAULT_REGION",
                             "echo \"Deploying to EKS\"",
                             f"cd {app_root_dir}",
-                            "helm upgrade --install --wait --timeout 600 --namespace $EKS_NAMESPACE --set image.repository=$REPOSITORY_URI --set image.tag=$imageTag $SERVICE_NAME {app_root_dir}/helm",
+                            "helm upgrade --install --wait --namespace $EKS_NAMESPACE --set image.repository=$REPOSITORY_URI --set image.tag=$imageTag $SERVICE_NAME {app_root_dir}/helm",
                         ]
                     }
                 },
