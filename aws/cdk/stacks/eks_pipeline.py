@@ -42,7 +42,7 @@ class EKSPipelineStack(Stack):
                 "phases": {
                     "install" : {
                         "commands": [
-                            "curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash",
+                            "curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2",
                             "curl " + "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" + " -o " + "awscliv2.zip",
                             "unzip awscliv2.zip",
                             "./aws/install",
@@ -66,7 +66,7 @@ class EKSPipelineStack(Stack):
                             "aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_DEFAULT_REGION",
                             "echo \"Deploying to EKS\"",
                             f"cd {app_root_dir}",
-                            "helm upgrade --install --wait --namespace $EKS_NAMESPACE --set image.repository=$REPOSITORY_URI --set image.tag=$imageTag $SERVICE_NAME {app_root_dir}/helm",
+                            f"helm upgrade --install --wait --namespace $EKS_NAMESPACE --set image.repository=$REPOSITORY_URI --set image.tag=$imageTag $SERVICE_NAME ./helm",
                         ]
                     }
                 },

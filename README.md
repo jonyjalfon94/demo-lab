@@ -18,6 +18,8 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfsigned.key -out 
 aws acm import-certificate --certificate fileb://selfsigned.crt --private-key fileb://selfsigned.key --tags Key=Name,Value=self-signed-demo
 ```
 
+Note: For the EKS deployment is not necesary to do any certificate configuration as the default self signed certificate that comes with the Nginx ingress controller is going to be used.
+
 # Deployment
 
 We will be using CDK to synthetize CloudFormation templates that deploy the demo hello-world service into `ecs` and `eks` by using CodePipeline with CodeDeploy and CodeCommit.
@@ -126,23 +128,82 @@ gcloud auth application-default login
 ## Procedure
 
 1. CD into the terraform directory
+
 ```bash
 cd ./gcp/terraform
 ```
 
-2. Initialize providers and modules
+2. Add a terraform.tfvars with the following value
+
+```bash
+project_id=<PROJECT_ID>
 ```
+
+3. Configure the provider with your PROJECT_ID
+
+```hcl
+# In providers.tf
+provider "google" {
+  project = <PROJECT_ID> # <-- This line
+  region  = "us-central1"
+  zone    = "us-central1-c"
+}
+```
+
+2. Initialize providers and modules
+
+```bash
 terraform init
 ```
 
-3. Check Infrastructure that will be provisioned
-```
+3. Check the Infrastructure that will be provisioned
+
+```bash
 terraform plan
 ```
 
 4. Provision infrastructure
-```
+
+```bash
 terraform apply
 ```
 
 5. The pipeline for the GKE bonus is located in the gihub repo at `.github/workflows`. Each commit to the master branch triggers build and push to GCR and deploy using the helm chart into the GKE cluster.
+
+Note: As the acloudguru sandbox does not allow to test the Github Workflow the service can be deployed manually as follows:
+
+- Go to the app directory
+
+```bash
+cd hello-world
+```
+
+- Configure Docker credentials
+
+```bash
+gcloud --quiet auth configure-docker
+```
+
+- Build and push Docker image
+
+```bash
+PROJECT_ID=<PROJECT_ID>
+TAG=v0.1.0
+
+docker build \
+         --tag "gcr.io/$PROJECT_ID/hello-world:$TAG" \
+         --build-arg GITHUB_SHA="$TAG" \
+         .
+
+docker push "gcr.io/$PROJECT_ID/hello-world:$TAG"
+```
+
+- Deploy helm chart
+
+```bash
+helm upgrade --install --wait --namespace default \
+          --set image.repository="gcr.io/$PROJECT_ID/hello-world" \
+          --set image.tag=$TAG \
+          hello-world \
+          ./helm
+```

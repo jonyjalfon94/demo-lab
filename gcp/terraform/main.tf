@@ -1,10 +1,10 @@
 locals {
-  cluster_type           = "simple-autopilot-public"
-  network_name           = "simple-autopilot-public-network"
-  subnet_name            = "simple-autopilot-public-subnet"
-  master_auth_subnetwork = "simple-autopilot-public-master-subnet"
-  pods_range_name        = "ip-range-pods-simple-autopilot-public"
-  svc_range_name         = "ip-range-svc-simple-autopilot-public"
+  cluster_type           = "demo-autopilot"
+  network_name           = "demo-autopilot-public-network"
+  subnet_name            = "demo-autopilot-public-subnet"
+  master_auth_subnetwork = "demo-autopilot-public-master-subnet"
+  pods_range_name        = "ip-range-pods-demo-autopilot-public"
+  svc_range_name         = "ip-range-svc-demo--autopilot-public"
   subnet_names           = [for subnet_self_link in module.gcp-network.subnets_self_links : split("/", subnet_self_link)[length(split("/", subnet_self_link)) - 1]]
 }
 
