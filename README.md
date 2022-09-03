@@ -1,7 +1,7 @@
 # Prerequisites
 
 In this demo we are using a self signed certificate in order to serve traffic through Https.
-To attach a certificate to the ALB that will be serving requests, a certificate must be imported to ACM before deploying the `HelloCommit` Stack.
+To attach a certificate to the ALB that will be serving requests, a certificate must be imported to ACM before deploying the `Helloworld` Stack.
 
 ## Procedure
 
